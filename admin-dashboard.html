@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Overview</title>
+    
+    <!-- Color mode toggle script - runs before page loads to prevent flickering -->
+    <script>
+        (() => {
+            'use strict'
+            
+            const getStoredTheme = () => localStorage.getItem('theme')
+            const setStoredTheme = theme => localStorage.setItem('theme', theme)
+            
+            const getPreferredTheme = () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme) {
+                    return storedTheme
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            }
+            
+            const setTheme = theme => {
+                if (theme === 'auto') {
+                    document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme)
+                }
+            }
+            
+            setTheme(getPreferredTheme())
+            
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme())
+                }
+            })
+        })()
+    </script>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-collapsed-width: 80px;
+            
+            /* Enterprise Color Palette - Light Mode */
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --info-color: #0891b2;
+            
+            /* Neutral Colors - Light Mode */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            /* Sidebar Colors - Light Mode */
+            --sidebar-bg: #0f172a;
+            --sidebar-text: #cbd5e1;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #2563eb;
+            --sidebar-border: rgba(255, 255, 255, 0.06);
+            
+            /* Page Background */
+            --page-bg: #f8fafc;
+        }
+        
+        /* Dark Mode Custom Variables */
+        [data-bs-theme="dark"] {
+            /* Neutral Colors - Dark Mode */
+            --gray-50: #1e293b;
+            --gray-100: #334155;
+            --gray-200: #475569;
+            --gray-300: #64748b;
+            --gray-400: #94a3b8;
+            --gray-500: #cbd5e1;
+            --gray-600: #e2e8f0;
+            --gray-700: #f1f5f9;
+            --gray-800: #f8fafc;
+            --gray-900: #ffffff;
+            
+            /* Sidebar Colors - Dark Mode */
+            --sidebar-bg: #0c1220;
+            --sidebar-text: #94a3b8;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #2563eb;
+            --sidebar-border: rgba(255, 255, 255, 0.08);
+            
+            /* Page Background */
+            --page-bg: #0f172a;
+            
+            /* Card backgrounds */
+            --bs-card-bg: #1e293b;
+            
+            /* Success/Warning/Danger colors for dark mode */
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            overflow-x: hidden;
+            background-color: var(--page-bg);
+            color: var(--gray-900);
+            font-size: 14px;
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        
+        /* Skip Navigation Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #0d6efd;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 10000;
+            border-radius: 0 0 4px 0;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* Enhanced Focus Styles for WCAG */
+        *:focus-visible {
+            outline: 3px solid #0d6efd;
+            outline-offset: 2px;
+        }
+        
+        .btn:focus-visible,
+        .nav-link:focus-visible {
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
+        
+        /* Sidebar Styles */
+        #sidebar {
+            min-height: 100vh;
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        #sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        #sidebar .sidebar-header {
+            padding: 1.75rem 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+        
+        #sidebar .sidebar-header h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.03em;
+        }
+        
+        #sidebar.collapsed .sidebar-header h4 {
+            opacity: 0;
+        }
+        
+        #sidebar .nav {
+            padding: 0.5rem 0;
+        }
+        
+        #sidebar .nav-link {
+            color: var(--sidebar-text);
+            padding: 0.75rem 1.5rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0.125rem 0.5rem;
+            border-radius: 8px;
+            border-left: none;
+        }
+        
+        #sidebar .nav-link:hover {
+            color: #fff;
+            background: var(--sidebar-hover);
+        }
+        
+        #sidebar .nav-link.active {
+            color: #fff;
+            background: var(--sidebar-active);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+        }
+        
+        #sidebar .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            min-width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        #sidebar.collapsed .nav-link {
+            padding: 0.75rem 0;
+            justify-content: center;
+            margin: 0.125rem 0.75rem;
+        }
+        
+        #sidebar.collapsed .nav-link span {
+            display: none;
+        }
+        
+        #sidebar.collapsed .nav-link i {
+            margin-right: 0;
+        }
+        
+        /* Main Content */
+        #content {
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #content.expanded {
+            margin-left: var(--sidebar-collapsed-width);
+            width: calc(100% - var(--sidebar-collapsed-width));
+        }
+        
+        /* Top Navbar */
+        .top-navbar {
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+            padding: 1rem 1.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        [data-bs-theme="dark"] .top-navbar {
+            background: var(--gray-100);
+            border-bottom-color: var(--gray-200);
+        }
+        
+        .top-navbar h1 {
+            color: var(--gray-900);
+            font-size: 20px;
+        }
+        
+        [data-bs-theme="dark"] .top-navbar h1 {
+            color: var(--gray-700);
+        }
+        
+        .top-navbar .btn-link {
+            color: var(--gray-600);
+            text-decoration: none;
+        }
+        
+        .top-navbar .btn-link:hover {
+            color: var(--gray-900);
+        }
+        
+        /* Stat Cards */
+        .stat-card {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #fff;
+        }
+        
+        [data-bs-theme="dark"] .stat-card {
+            background: var(--gray-100);
+            border-color: var(--gray-200);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--gray-300);
+        }
+        
+        .stat-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-900);
+            letter-spacing: -0.03em;
+        }
+        
+        [data-bs-theme="dark"] .stat-card h3 {
+            color: var(--gray-700);
+        }
+        
+        .stat-card p {
+            color: var(--gray-500);
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        /* Updated stat icon colors */
+        .stat-icon.icon-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #fff;
+        }
+        
+        .stat-icon.icon-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+        }
+        
+        .stat-icon.icon-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #fff;
+        }
+        
+        .stat-icon.icon-info {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: #fff;
+        }
+        
+        /* Badge styles */
+        .badge {
+            font-weight: 600;
+            padding: 0.375rem 0.75rem;
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+        
+        .badge.bg-success {
+            background-color: var(--success-color) !important;
+        }
+        
+        .badge.bg-warning {
+            background-color: var(--warning-color) !important;
+        }
+        
+        .badge.bg-danger {
+            background-color: var(--danger-color) !important;
+        }
+        
+        .badge.bg-info {
+            background-color: var(--info-color) !important;
+            color: #fff !important;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        /* Card styles */
+        .card {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        
+        [data-bs-theme="dark"] .card {
+            background: var(--gray-100);
+            border-color: var(--gray-200);
+        }
+        
+        .card-header {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        [data-bs-theme="dark"] .card-header {
+            background: transparent;
+        }
+        
+        .card-header h3,
+        .card-header h2 {
+            color: var(--gray-900);
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        [data-bs-theme="dark"] .card-header h3,
+        [data-bs-theme="dark"] .card-header h2 {
+            color: var(--gray-700);
+        }
+        
+        /* Table Styles */
+        .table {
+            color: var(--gray-700);
+            font-size: 14px;
+        }
+        
+        [data-bs-theme="dark"] .table {
+            color: var(--gray-600);
+        }
+        
+        .table thead th {
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray-600);
+            border-bottom: 2px solid var(--gray-200);
+            padding: 1rem 1.5rem;
+        }
+        
+        [data-bs-theme="dark"] .table thead {
+            background: var(--gray-200);
+        }
+        
+        [data-bs-theme="dark"] .table thead th {
+            color: var(--gray-700);
+        }
+        
+        .table tbody td {
+            padding: 1rem 1.5rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        [data-bs-theme="dark"] .table tbody td {
+            border-bottom-color: var(--gray-200);
+        }
+        
+        .table tbody tr:hover {
+            background-color: var(--gray-50);
+        }
+        
+        [data-bs-theme="dark"] .table tbody tr:hover {
+            background-color: var(--gray-200);
+        }
+        
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Button styles */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+            font-size: 14px;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #fff;
+        }
+        
+        .btn-sm {
+            padding: 0.375rem 0.875rem;
+            font-size: 13px;
+        }
+        
+        /* Improved color contrast for better accessibility */
+        .text-muted {
+            color: var(--gray-500) !important;
+        }
+        
+        .text-success {
+            color: var(--success-color) !important;
+        }
+        
+        .text-danger {
+            color: var(--danger-color) !important;
+        }
+        
+        /* Profile images */
+        .rounded-circle {
+            border: 2px solid var(--gray-100);
+        }
+        
+        [data-bs-theme="dark"] .rounded-circle {
+            border-color: var(--gray-200);
+        }
+        
+        /* Dropdown menu */
+        .dropdown-menu {
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        
+        [data-bs-theme="dark"] .dropdown-menu {
+            background: var(--gray-100);
+            border-color: var(--gray-200);
+        }
+        
+        .dropdown-item {
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+        
+        .dropdown-item:hover {
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+        }
+        
+        .dropdown-item i {
+            margin-right: 0.5rem;
+            width: 16px;
+            color: var(--gray-500);
+        }
+        
+        /* Theme switcher active state */
+        .dropdown-item.active {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        
+        .dropdown-item.active i {
+            color: #fff;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: var(--sidebar-collapsed-width);
+            }
+            
+            #sidebar .nav-link {
+                padding: 0.75rem 0;
+                justify-content: center;
+                margin: 0.125rem 0.75rem;
+            }
+            
+            #sidebar .nav-link span {
+                display: none;
+            }
+            
+            #sidebar .nav-link i {
+                margin-right: 0;
+            }
+            
+            #sidebar .sidebar-header h4 {
+                opacity: 0;
+            }
+            
+            #content {
+                margin-left: var(--sidebar-collapsed-width);
+                width: calc(100% - var(--sidebar-collapsed-width));
+            }
+        }
+        
+        /* Additional polish */
+        main {
+            padding: 2rem 1.75rem;
+        }
+        
+        .sidebar-header .bi-bar-chart-fill {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Section spacing */
+        section {
+            margin-bottom: 2rem;
+        }
+        
+        section:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Navigation Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="text-white" role="navigation" aria-label="Main navigation">
+        <div class="sidebar-header">
+            <h4 class="mb-0"><i class="bi bi-bar-chart-fill" aria-hidden="true"></i> AdminPanel</h4>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" aria-current="page">
+                    <i class="bi bi-speedometer2" aria-hidden="true"></i> 
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-people" aria-hidden="true"></i> 
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-box-seam" aria-hidden="true"></i> 
+                    <span>Products</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-cart3" aria-hidden="true"></i> 
+                    <span>Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-graph-up" aria-hidden="true"></i> 
+                    <span>Analytics</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-wallet2" aria-hidden="true"></i> 
+                    <span>Payments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="bi bi-gear" aria-hidden="true"></i> 
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Top Navbar -->
+        <header class="top-navbar d-flex justify-content-between align-items-center" role="banner">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link" id="sidebarToggle" aria-label="Toggle sidebar navigation" aria-expanded="true" aria-controls="sidebar">
+                    <i class="bi bi-list fs-3" aria-hidden="true"></i>
+                </button>
+                <h1 class="h5 mb-0 ms-3">Dashboard Overview</h1>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <!-- Theme Switcher -->
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle d-flex align-items-center gap-2" 
+                            type="button" 
+                            id="bd-theme"
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                            aria-label="Toggle theme">
+                        <i class="bi bi-circle-half theme-icon-active" aria-hidden="true"></i>
+                        <span class="d-none d-md-inline" id="bd-theme-text">Theme</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme">
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="light">
+                                <i class="bi bi-sun-fill me-2" aria-hidden="true"></i>
+                                Light
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="dark">
+                                <i class="bi bi-moon-stars-fill me-2" aria-hidden="true"></i>
+                                Dark
+                            </button>
+                        </li>
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center" type="button" data-bs-theme-value="auto">
+                                <i class="bi bi-circle-half me-2" aria-hidden="true"></i>
+                                Auto
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-link position-relative" aria-label="Notifications - 3 unread">
+                    <i class="bi bi-bell fs-5" aria-hidden="true"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        3
+                        <span class="visually-hidden">unread notifications</span>
+                    </span>
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle d-flex align-items-center gap-2" 
+                            type="button" 
+                            id="userMenuButton"
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false"
+                            aria-label="User menu">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0d6efd&color=fff" 
+                             class="rounded-circle" 
+                             width="35" 
+                             height="35" 
+                             alt="Admin User profile picture">
+                        <span class="d-none d-md-inline">Admin User</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuButton">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person" aria-hidden="true"></i> Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main id="main-content" role="main">
+            <!-- Stat Cards Row -->
+            <section aria-labelledby="stats-heading">
+                <h2 id="stats-heading" class="visually-hidden">Dashboard Statistics</h2>
+                <div class="row g-4 mb-4">
+                    <div class="col-xl-3 col-md-6">
+                        <article class="card stat-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Total Users</p>
+                                        <h3 class="mb-1">8,462</h3>
+                                        <small class="text-success" style="font-weight: 600;">
+                                            <i class="bi bi-arrow-up" aria-hidden="true"></i> 
+                                            <span>12.5%</span>
+                                        </small>
+                                    </div>
+                                    <div class="stat-icon icon-primary" aria-hidden="true">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <article class="card stat-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Revenue</p>
+                                        <h3 class="mb-1">$52,345</h3>
+                                        <small class="text-success" style="font-weight: 600;">
+                                            <i class="bi bi-arrow-up" aria-hidden="true"></i> 
+                                            <span>8.2%</span>
+                                        </small>
+                                    </div>
+                                    <div class="stat-icon icon-success" aria-hidden="true">
+                                        <i class="bi bi-currency-dollar"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <article class="card stat-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Orders</p>
+                                        <h3 class="mb-1">1,245</h3>
+                                        <small class="text-danger" style="font-weight: 600;">
+                                            <i class="bi bi-arrow-down" aria-hidden="true"></i> 
+                                            <span>3.1%</span>
+                                        </small>
+                                    </div>
+                                    <div class="stat-icon icon-warning" aria-hidden="true">
+                                        <i class="bi bi-cart3"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <article class="card stat-card shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <p class="text-muted mb-1">Growth</p>
+                                        <h3 class="mb-1">23.5%</h3>
+                                        <small class="text-success" style="font-weight: 600;">
+                                            <i class="bi bi-arrow-up" aria-hidden="true"></i> 
+                                            <span>5.3%</span>
+                                        </small>
+                                    </div>
+                                    <div class="stat-icon icon-info" aria-hidden="true">
+                                        <i class="bi bi-graph-up"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Row -->
+            <section aria-labelledby="charts-heading">
+                <h2 id="charts-heading" class="visually-hidden">Data Visualizations</h2>
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h3 class="h5 mb-0">Revenue Overview</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="revenueChart" role="img" aria-label="Line chart showing revenue and expenses trends from January to October"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white">
+                                <h3 class="h5 mb-0">Traffic Sources</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="trafficChart" role="img" aria-label="Doughnut chart showing traffic sources distribution"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Orders Table -->
+            <section aria-labelledby="orders-heading">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h2 id="orders-heading" class="h5 mb-0">Recent Orders</h2>
+                                <a href="#" class="btn btn-sm btn-primary">View All Orders</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0" aria-label="Recent orders">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">Order ID</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Product</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>#ORD-2024-001</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=John+Doe&background=random" 
+                                                             class="rounded-circle me-2" 
+                                                             width="32" 
+                                                             height="32" 
+                                                             alt="John Doe">
+                                                        John Doe
+                                                    </div>
+                                                </td>
+                                                <td>Wireless Headphones</td>
+                                                <td>$299.99</td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td><time datetime="2025-10-15">2025-10-15</time></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-link" aria-label="View order ORD-2024-001 details">
+                                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-2024-002</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=Jane+Smith&background=random" 
+                                                             class="rounded-circle me-2" 
+                                                             width="32" 
+                                                             height="32" 
+                                                             alt="Jane Smith">
+                                                        Jane Smith
+                                                    </div>
+                                                </td>
+                                                <td>Smart Watch</td>
+                                                <td>$399.99</td>
+                                                <td><span class="badge bg-warning text-dark">Pending</span></td>
+                                                <td><time datetime="2025-10-16">2025-10-16</time></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-link" aria-label="View order ORD-2024-002 details">
+                                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-2024-003</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=Mike+Johnson&background=random" 
+                                                             class="rounded-circle me-2" 
+                                                             width="32" 
+                                                             height="32" 
+                                                             alt="Mike Johnson">
+                                                        Mike Johnson
+                                                    </div>
+                                                </td>
+                                                <td>Laptop Stand</td>
+                                                <td>$89.99</td>
+                                                <td><span class="badge bg-info">Processing</span></td>
+                                                <td><time datetime="2025-10-17">2025-10-17</time></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-link" aria-label="View order ORD-2024-003 details">
+                                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-2024-004</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=Sarah+Wilson&background=random" 
+                                                             class="rounded-circle me-2" 
+                                                             width="32" 
+                                                             height="32" 
+                                                             alt="Sarah Wilson">
+                                                        Sarah Wilson
+                                                    </div>
+                                                </td>
+                                                <td>USB-C Cable</td>
+                                                <td>$19.99</td>
+                                                <td><span class="badge bg-success">Completed</span></td>
+                                                <td><time datetime="2025-10-17">2025-10-17</time></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-link" aria-label="View order ORD-2024-004 details">
+                                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>#ORD-2024-005</td>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="https://ui-avatars.com/api/?name=David+Lee&background=random" 
+                                                             class="rounded-circle me-2" 
+                                                             width="32" 
+                                                             height="32" 
+                                                             alt="David Lee">
+                                                        David Lee
+                                                    </div>
+                                                </td>
+                                                <td>Mechanical Keyboard</td>
+                                                <td>$159.99</td>
+                                                <td><span class="badge bg-danger">Cancelled</span></td>
+                                                <td><time datetime="2025-10-16">2025-10-16</time></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-link" aria-label="View order ORD-2024-005 details">
+                                                        <i class="bi bi-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.js"></script>
+    
+    <script>
+        // Sidebar Toggle with ARIA support
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        
+        sidebarToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('expanded');
+            
+            // Update ARIA attribute
+            const isExpanded = !sidebar.classList.contains('collapsed');
+            sidebarToggle.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Revenue Chart (Line Chart)
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        
+        // Function to get grid color based on current theme
+        const getGridColor = () => {
+            return document.documentElement.getAttribute('data-bs-theme') === 'dark' ? '#475569' : '#f1f5f9';
+        };
+        
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.08)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#2563eb',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }, {
+                    label: 'Expenses',
+                    data: [8000, 12000, 10000, 15000, 14000, 18000, 17000, 20000, 19000, 22000],
+                    borderColor: '#64748b',
+                    backgroundColor: 'rgba(100, 116, 139, 0.08)',
+                    tension: 0.4,
+                    fill: true,
+                    borderWidth: 2.5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#64748b',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 16,
+                            font: {
+                                size: 13,
+                                family: 'Inter',
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: {
+                            size: 13,
+                            family: 'Inter',
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 13,
+                            family: 'Inter'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '$' + context.parsed.y.toLocaleString();
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        border: {
+                            display: false
+                        },
+                        grid: {
+                            color: getGridColor()
+                        },
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: 'Inter'
+                            },
+                            color: '#64748b',
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        border: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: 'Inter'
+                            },
+                            color: '#64748b'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Traffic Sources Chart (Doughnut Chart)
+        const trafficCtx = document.getElementById('trafficChart').getContext('2d');
+        const trafficChart = new Chart(trafficCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Direct', 'Organic Search', 'Social Media', 'Referral', 'Email'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: [
+                        '#2563eb',
+                        '#059669',
+                        '#d97706',
+                        '#0891b2',
+                        '#64748b'
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 16,
+                            font: {
+                                size: 13,
+                                family: 'Inter',
+                                weight: '500'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 12,
+                        cornerRadius: 8,
+                        titleFont: {
+                            size: 13,
+                            family: 'Inter',
+                            weight: '600'
+                        },
+                        bodyFont: {
+                            size: 13,
+                            family: 'Inter'
+                        },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.parsed + '%';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add active state to nav links with keyboard support
+        document.querySelectorAll('#sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('#sidebar .nav-link').forEach(l => {
+                    l.classList.remove('active');
+                    l.removeAttribute('aria-current');
+                });
+                this.classList.add('active');
+                this.setAttribute('aria-current', 'page');
+            });
+        });
+        
+        // Theme Switcher Functionality
+        (() => {
+            'use strict'
+            
+            const getStoredTheme = () => localStorage.getItem('theme')
+            const setStoredTheme = theme => localStorage.setItem('theme', theme)
+            
+            const getPreferredTheme = () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme) {
+                    return storedTheme
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            }
+            
+            const setTheme = theme => {
+                if (theme === 'auto') {
+                    document.documentElement.setAttribute('data-bs-theme', (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+                } else {
+                    document.documentElement.setAttribute('data-bs-theme', theme)
+                }
+                
+                // Update charts when theme changes
+                updateChartsForTheme()
+            }
+            
+            const updateChartsForTheme = () => {
+                const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark'
+                const gridColor = isDark ? '#475569' : '#f1f5f9'
+                
+                if (typeof revenueChart !== 'undefined') {
+                    revenueChart.options.scales.y.grid.color = gridColor
+                    revenueChart.update('none') // 'none' prevents animation for smoother transition
+                }
+            }
+            
+            const showActiveTheme = (theme, focus = false) => {
+                const themeSwitcher = document.querySelector('#bd-theme')
+                if (!themeSwitcher) {
+                    return
+                }
+                
+                const activeThemeIcon = document.querySelector('.theme-icon-active')
+                const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+                
+                // Update icon
+                const iconMap = {
+                    'light': 'bi-sun-fill',
+                    'dark': 'bi-moon-stars-fill',
+                    'auto': 'bi-circle-half'
+                }
+                
+                // Remove all icon classes
+                activeThemeIcon.classList.remove('bi-sun-fill', 'bi-moon-stars-fill', 'bi-circle-half')
+                // Add the new icon class
+                activeThemeIcon.classList.add(iconMap[theme])
+                
+                // Update active state on buttons
+                document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+                    element.classList.remove('active')
+                    element.setAttribute('aria-pressed', 'false')
+                })
+                
+                btnToActive.classList.add('active')
+                btnToActive.setAttribute('aria-pressed', 'true')
+                
+                if (focus) {
+                    themeSwitcher.focus()
+                }
+            }
+            
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                const storedTheme = getStoredTheme()
+                if (storedTheme !== 'light' && storedTheme !== 'dark') {
+                    setTheme(getPreferredTheme())
+                }
+            })
+            
+            // Initialize on page load
+            window.addEventListener('DOMContentLoaded', () => {
+                showActiveTheme(getPreferredTheme())
+                updateChartsForTheme() // Update charts for initial theme
+                
+                document.querySelectorAll('[data-bs-theme-value]')
+                    .forEach(toggle => {
+                        toggle.addEventListener('click', () => {
+                            const theme = toggle.getAttribute('data-bs-theme-value')
+                            setStoredTheme(theme)
+                            setTheme(theme)
+                            showActiveTheme(theme, true)
+                        })
+                    })
+            })
+        })()
+    </script>
+</body>
+</html>
