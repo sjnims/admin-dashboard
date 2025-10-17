@@ -1,0 +1,1210 @@
+/**
+ * Admin Dashboard - Main Stylesheet
+ *
+ * Professional admin dashboard template with enterprise-grade design system
+ * Features: Dark mode support, responsive layout, accessible components
+ *
+ * ===================================================================
+ * QUICK CUSTOMIZATION GUIDE
+ * ===================================================================
+ *
+ * 🎨 COMMON CUSTOMIZATIONS:
+ *
+ * 1. CHANGE BRAND COLOR:
+ *    --primary-color: #2563eb;    → Change to your brand color
+ *    --primary-dark: #1e40af;     → Darker shade for hover states
+ *    --primary-light: #3b82f6;    → Lighter shade for accents
+ *
+ * 2. ADJUST SIDEBAR WIDTH:
+ *    --sidebar-width: 260px;           → Full sidebar width
+ *    --sidebar-collapsed-width: 80px;  → Collapsed sidebar width
+ *
+ * 3. CUSTOMIZE SIDEBAR APPEARANCE:
+ *    --sidebar-bg: #0f172a;      → Sidebar background color
+ *    --sidebar-text: #cbd5e1;    → Default text color
+ *    --sidebar-hover: #1e293b;   → Hover background color
+ *    --sidebar-active: #2563eb;  → Active item background color
+ *
+ * 4. CHANGE PAGE BACKGROUND:
+ *    --page-bg: #f8fafc;  → Light mode background
+ *    [data-bs-theme="dark"] --page-bg: #0f172a;  → Dark mode background
+ *
+ * 5. MODIFY TYPOGRAPHY:
+ *    body { font-size: 14px; }   → Base font size (section 2)
+ *    * { font-family: ... }      → Base font family (section 2)
+ *
+ * 6. ADJUST CARD STYLING:
+ *    .card { border-radius: 12px; }  → Card corners (section 9)
+ *    .stat-card:hover { transform: translateY(-4px); }  → Hover effect (section 7)
+ *
+ * 7. CHANGE STATUS COLORS:
+ *    --success-color: #059669;  → Success/positive states
+ *    --warning-color: #d97706;  → Warning/caution states
+ *    --danger-color: #dc2626;   → Error/danger states
+ *    --info-color: #0891b2;     → Informational states
+ *
+ * 8. CUSTOMIZE RESPONSIVE BREAKPOINT:
+ *    @media (max-width: 768px)  → Mobile breakpoint (section 15)
+ *
+ * ===================================================================
+ * COLOR SCHEME EXAMPLES:
+ * ===================================================================
+ *
+ * BLUE (Default):
+ *   --primary-color: #2563eb;
+ *   --primary-dark: #1e40af;
+ *   --primary-light: #3b82f6;
+ *
+ * GREEN:
+ *   --primary-color: #059669;
+ *   --primary-dark: #047857;
+ *   --primary-light: #10b981;
+ *
+ * PURPLE:
+ *   --primary-color: #7c3aed;
+ *   --primary-dark: #6d28d9;
+ *   --primary-light: #8b5cf6;
+ *
+ * RED:
+ *   --primary-color: #dc2626;
+ *   --primary-dark: #b91c1c;
+ *   --primary-light: #ef4444;
+ *
+ * ===================================================================
+ *
+ * Table of Contents:
+ * 1. CSS Variables & Theme System
+ * 2. Global Styles
+ * 3. Accessibility & Skip Links
+ * 4. Sidebar Styles
+ * 5. Main Content Area
+ * 6. Top Navbar
+ * 7. Stat Cards
+ * 8. Chart Containers
+ * 9. Card Components
+ * 10. Table Styles
+ * 11. Button Styles
+ * 12. Badge Styles
+ * 13. Profile Images
+ * 14. Dropdown Menu
+ * 15. Responsive Styles
+ * 16. Additional Polish
+ */
+
+/* ===================================================================
+   SECTION 1: CSS Variables & Theme System
+   ================================================================
+
+   This section defines all customizable variables for the theme.
+   Variables automatically adapt between light and dark modes.
+
+   HOW TO CUSTOMIZE:
+   - Change values in :root for light mode
+   - Change values in [data-bs-theme="dark"] for dark mode
+   - Variables are used throughout the stylesheet with var()
+   ================================================================ */
+
+:root {
+    /* ============================================================
+       LAYOUT DIMENSIONS
+       ============================================================ */
+
+    /* CUSTOMIZE: Sidebar width when fully expanded */
+    --sidebar-width: 260px;
+
+    /* CUSTOMIZE: Sidebar width when collapsed (icon-only mode) */
+    --sidebar-collapsed-width: 80px;
+
+    /* ============================================================
+       BRAND & ACCENT COLORS - Light Mode
+       ============================================================
+       Used for: Buttons, active states, links, accents
+       ============================================================ */
+
+    /* CUSTOMIZE: Your primary brand color (used throughout the UI) */
+    --primary-color: #2563eb;
+
+    /* CUSTOMIZE: Darker shade for hover states and emphasis */
+    --primary-dark: #1e40af;
+
+    /* CUSTOMIZE: Lighter shade for subtle accents */
+    --primary-light: #3b82f6;
+
+    /* CUSTOMIZE: Secondary UI color for less prominent elements */
+    --secondary-color: #64748b;
+
+    /* ============================================================
+       STATUS COLORS - Light Mode
+       ============================================================
+       Used for: Badges, alerts, status indicators
+       ============================================================ */
+
+    /* CUSTOMIZE: Success/positive states (e.g., "Active" status) */
+    --success-color: #059669;
+
+    /* CUSTOMIZE: Warning/caution states (e.g., "Pending" status) */
+    --warning-color: #d97706;
+
+    /* CUSTOMIZE: Error/danger states (e.g., "Failed" status) */
+    --danger-color: #dc2626;
+
+    /* CUSTOMIZE: Informational states (e.g., "Info" alerts) */
+    --info-color: #0891b2;
+
+    /* ============================================================
+       NEUTRAL GRAYSCALE - Light Mode
+       ============================================================
+       Used for: Text, borders, backgrounds, shadows
+       Naming: 50 (lightest) to 900 (darkest)
+       ============================================================ */
+
+    /* Very light gray - Used for: Subtle backgrounds, table hover */
+    --gray-50: #f8fafc;
+
+    /* Light gray - Used for: Card backgrounds, section dividers */
+    --gray-100: #f1f5f9;
+
+    /* Soft gray - Used for: Borders, dividers */
+    --gray-200: #e2e8f0;
+
+    /* Medium-light gray - Used for: Disabled states, secondary borders */
+    --gray-300: #cbd5e1;
+
+    /* Medium gray - Used for: Icons, placeholder text */
+    --gray-400: #94a3b8;
+
+    /* Mid-tone gray - Used for: Secondary text, muted content */
+    --gray-500: #64748b;
+
+    /* Medium-dark gray - Used for: Body text, labels */
+    --gray-600: #475569;
+
+    /* Dark gray - Used for: Headings, emphasized text */
+    --gray-700: #334155;
+
+    /* Very dark gray - Used for: Primary text, strong emphasis */
+    --gray-800: #1e293b;
+
+    /* Almost black - Used for: Maximum contrast text */
+    --gray-900: #0f172a;
+
+    /* ============================================================
+       SIDEBAR THEME - Light Mode
+       ============================================================
+       Controls the left navigation sidebar appearance
+       ============================================================ */
+
+    /* CUSTOMIZE: Sidebar background color (default: dark navy) */
+    --sidebar-bg: #0f172a;
+
+    /* CUSTOMIZE: Default sidebar text/icon color */
+    --sidebar-text: #cbd5e1;
+
+    /* CUSTOMIZE: Background color when hovering over sidebar items */
+    --sidebar-hover: #1e293b;
+
+    /* CUSTOMIZE: Background color for active/selected sidebar item */
+    --sidebar-active: #2563eb;
+
+    /* CUSTOMIZE: Sidebar border color (subtle dividers) */
+    --sidebar-border: rgba(255, 255, 255, 0.06);
+
+    /* ============================================================
+       PAGE BACKGROUND
+       ============================================================ */
+
+    /* CUSTOMIZE: Main page background color (light mode) */
+    --page-bg: #f8fafc;
+}
+
+/* ===================================================================
+   DARK MODE THEME OVERRIDES
+   ================================================================
+
+   These variables override the light mode defaults when dark mode
+   is active. The [data-bs-theme="dark"] attribute is set on <html>.
+
+   HOW DARK MODE WORKS:
+   - Bootstrap detects system preference or manual toggle
+   - Sets data-bs-theme="dark" on <html> element
+   - These variables override :root values
+   - Grayscale is inverted (50 becomes dark, 900 becomes light)
+
+   CUSTOMIZE: Adjust these values for your dark mode aesthetic
+   ================================================================ */
+
+[data-bs-theme="dark"] {
+    /* ============================================================
+       NEUTRAL GRAYSCALE - Dark Mode (Inverted)
+       ============================================================ */
+
+    /* Dark mode gray-50 - Used for: Subtle backgrounds */
+    --gray-50: #1e293b;
+
+    /* Dark mode gray-100 - Used for: Card backgrounds */
+    --gray-100: #334155;
+
+    /* Dark mode gray-200 - Used for: Borders, dividers */
+    --gray-200: #475569;
+
+    /* Dark mode gray-300 - Used for: Disabled states */
+    --gray-300: #64748b;
+
+    /* Dark mode gray-400 - Used for: Icons, placeholder text */
+    --gray-400: #94a3b8;
+
+    /* Dark mode gray-500 - Used for: Secondary text */
+    --gray-500: #cbd5e1;
+
+    /* Dark mode gray-600 - Used for: Body text */
+    --gray-600: #e2e8f0;
+
+    /* Dark mode gray-700 - Used for: Headings */
+    --gray-700: #f1f5f9;
+
+    /* Dark mode gray-800 - Used for: Primary text */
+    --gray-800: #f8fafc;
+
+    /* Dark mode gray-900 - Used for: Maximum contrast text */
+    --gray-900: #ffffff;
+
+    /* ============================================================
+       SIDEBAR THEME - Dark Mode
+       ============================================================ */
+
+    /* CUSTOMIZE: Sidebar background (darker in dark mode) */
+    --sidebar-bg: #0c1220;
+
+    /* CUSTOMIZE: Sidebar text color (muted in dark mode) */
+    --sidebar-text: #94a3b8;
+
+    /* CUSTOMIZE: Sidebar hover background */
+    --sidebar-hover: #1e293b;
+
+    /* CUSTOMIZE: Active sidebar item (keeps brand color) */
+    --sidebar-active: #2563eb;
+
+    /* CUSTOMIZE: Sidebar borders (slightly more visible in dark) */
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+
+    /* ============================================================
+       PAGE BACKGROUND - Dark Mode
+       ============================================================ */
+
+    /* CUSTOMIZE: Main page background (dark navy) */
+    --page-bg: #0f172a;
+
+    /* ============================================================
+       COMPONENT OVERRIDES - Dark Mode
+       ============================================================ */
+
+    /* Card backgrounds in dark mode */
+    --bs-card-bg: #1e293b;
+
+    /* ============================================================
+       STATUS COLORS - Dark Mode (Brightened for contrast)
+       ============================================================ */
+
+    /* Success color (brighter green for dark backgrounds) */
+    --success-color: #10b981;
+
+    /* Warning color (brighter orange for visibility) */
+    --warning-color: #f59e0b;
+
+    /* Danger color (brighter red for emphasis) */
+    --danger-color: #ef4444;
+}
+
+/* ===================================================================
+   SECTION 2: Global Styles
+   ================================================================
+
+   Base styles applied to all elements and common HTML tags.
+
+   HOW TO CUSTOMIZE:
+   - Change font-family for different typeface
+   - Adjust font-size for larger/smaller base text
+   - Modify line-height for text density
+   - Update letter-spacing for typography feel
+   ================================================================ */
+
+* {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: var(--page-bg);
+    color: var(--gray-900);
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+/* ===================================================================
+   SECTION 3: Accessibility & Skip Links
+   ================================================================
+
+   WCAG 2.1 AA compliance features for keyboard navigation and
+   screen reader accessibility.
+
+   HOW TO CUSTOMIZE:
+   - Change skip-link colors to match your brand
+   - Adjust focus outline thickness for visibility
+   - Modify z-index if conflicts with other elements
+   ================================================================ */
+
+/* Skip Navigation Link for Accessibility */
+/* CUSTOMIZE: Allows keyboard users to skip to main content */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    /* Hidden by default */
+    left: 0;
+    background: #0d6efd;
+    /* CUSTOMIZE: Match your primary color */
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    z-index: 10000;
+    /* CUSTOMIZE: Adjust if needed */
+    border-radius: 0 0 4px 0;
+}
+
+/* Visible when focused via keyboard */
+.skip-link:focus {
+    top: 0;
+    /* Slides down when Tab is pressed */
+}
+
+/* Enhanced Focus Styles for WCAG Compliance */
+/* CUSTOMIZE: Visible keyboard focus for all interactive elements */
+*:focus-visible {
+    outline: 3px solid #0d6efd;
+    /* CUSTOMIZE: Match primary color */
+    outline-offset: 2px;
+    /* CUSTOMIZE: Space between element and outline */
+}
+
+/* Special focus for buttons and links in sidebar */
+.btn:focus-visible,
+.nav-link:focus-visible {
+    outline: 3px solid #ffffff;
+    /* White outline for dark sidebar */
+    outline-offset: 2px;
+}
+
+/* ===================================================================
+   SECTION 4: Sidebar Styles
+   ================================================================
+
+   Left navigation sidebar with collapse functionality.
+   Responsive: Auto-collapses on mobile devices.
+
+   HOW TO CUSTOMIZE SIDEBAR:
+   1. Width: Adjust --sidebar-width and --sidebar-collapsed-width
+   2. Colors: Use CSS variables (--sidebar-bg, --sidebar-text, etc.)
+   3. Animation: Modify transition timing (cubic-bezier values)
+   4. Icon spacing: Change .nav-link i margin-right
+   5. Item padding: Adjust .nav-link padding values
+
+   EXAMPLE: Wider sidebar with slower animation
+   --sidebar-width: 300px;
+   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+   ================================================================ */
+
+#sidebar {
+    min-height: 100vh;
+    /* Full viewport height */
+    width: var(--sidebar-width);
+    /* CUSTOMIZE: Use CSS variable */
+    background: var(--sidebar-bg);
+    /* CUSTOMIZE: Dark background */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth animation */
+    position: fixed;
+    /* Fixed position for scrolling content */
+    top: 0;
+    left: 0;
+    z-index: 999;
+    /* CUSTOMIZE: Below modals (1000+), above content */
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+    /* CUSTOMIZE: Subtle shadow */
+}
+
+/* Collapsed state (icon-only mode) */
+#sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+    /* CUSTOMIZE: Narrower width */
+}
+
+/* Sidebar header area (logo/title) */
+#sidebar .sidebar-header {
+    padding: 1.75rem 1.5rem;
+    /* CUSTOMIZE: Header padding */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    /* Prevents text wrapping */
+    overflow: hidden;
+    border-bottom: 1px solid var(--sidebar-border);
+    /* CUSTOMIZE: Divider */
+}
+
+#sidebar .sidebar-header h4 {
+    font-size: 18px;
+    /* CUSTOMIZE: Title font size */
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.03em;
+    /* Tight spacing for modern look */
+}
+
+/* Hide title when collapsed */
+#sidebar.collapsed .sidebar-header h4 {
+    opacity: 0;
+}
+
+/* Navigation list container */
+#sidebar .nav {
+    padding: 0.5rem 0;
+    /* CUSTOMIZE: Top/bottom spacing */
+}
+
+/* Individual navigation links */
+/* CUSTOMIZE: Complete link styling with hover and active states */
+#sidebar .nav-link {
+    color: var(--sidebar-text);
+    /* Default text color */
+    padding: 0.75rem 1.5rem;
+    /* CUSTOMIZE: Vertical/horizontal padding */
+    border-left: 3px solid transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    /* CUSTOMIZE: Link text size */
+    font-weight: 500;
+    margin: 0.125rem 0.5rem;
+    /* CUSTOMIZE: Spacing between links */
+    border-radius: 8px;
+    /* CUSTOMIZE: Rounded corners */
+    border-left: none;
+}
+
+/* Hover state */
+#sidebar .nav-link:hover {
+    color: #fff;
+    /* CUSTOMIZE: Text color on hover */
+    background: var(--sidebar-hover);
+    /* CUSTOMIZE: Background on hover */
+}
+
+/* Active/selected page */
+#sidebar .nav-link.active {
+    color: #fff;
+    /* CUSTOMIZE: Active text color */
+    background: var(--sidebar-active);
+    /* CUSTOMIZE: Active background */
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    /* CUSTOMIZE: Active glow */
+}
+
+/* Icon styling within links */
+#sidebar .nav-link i {
+    margin-right: 12px;
+    /* CUSTOMIZE: Space between icon and text */
+    width: 20px;
+    /* Fixed width for alignment */
+    min-width: 20px;
+    text-align: center;
+    font-size: 18px;
+    /* CUSTOMIZE: Icon size */
+}
+
+/* Collapsed state adjustments */
+#sidebar.collapsed .nav-link {
+    padding: 0.75rem 0;
+    /* Centered padding when collapsed */
+    justify-content: center;
+    margin: 0.125rem 0.75rem;
+}
+
+#sidebar.collapsed .nav-link span {
+    display: none;
+    /* Hide text labels when collapsed */
+}
+
+#sidebar.collapsed .nav-link i {
+    margin-right: 0;
+    /* Remove icon spacing when collapsed */
+}
+
+/* ===================================================================
+   SECTION 5: Main Content Area
+   ================================================================
+
+   Main content wrapper that adjusts based on sidebar state.
+   Automatically resizes when sidebar collapses/expands.
+
+   HOW TO CUSTOMIZE:
+   - Adjust main padding for content spacing
+   - Modify section margin-bottom for vertical rhythm
+   - Change transition timing for resize animation
+   ================================================================ */
+
+#content {
+    margin-left: var(--sidebar-width);
+    /* CUSTOMIZE: Match sidebar width */
+    width: calc(100% - var(--sidebar-width));
+    /* Dynamic width calculation */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth resize */
+}
+
+/* When sidebar is collapsed */
+#content.expanded {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+}
+
+/* Main content padding */
+main {
+    padding: 2rem 1.75rem;
+    /* CUSTOMIZE: Content area padding */
+}
+
+/* Vertical section spacing */
+/* CUSTOMIZE: Space between major sections */
+section {
+    margin-bottom: 2rem;
+    /* CUSTOMIZE: Section spacing */
+}
+
+section:last-child {
+    margin-bottom: 0;
+    /* No bottom margin on last section */
+}
+
+/* ===================================================================
+   SECTION 6: Top Navbar
+   ================================================================
+
+   Horizontal navbar with page title and user controls.
+   Adapts colors for dark mode.
+
+   HOW TO CUSTOMIZE:
+   - Change padding for height adjustment
+   - Modify shadow for depth effect
+   - Adjust h1 font-size for title prominence
+   ================================================================ */
+
+.top-navbar {
+    background: #fff;
+    /* CUSTOMIZE: Light mode background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    /* CUSTOMIZE: Subtle shadow */
+    padding: 1rem 1.75rem;
+    /* CUSTOMIZE: Navbar height */
+    border-bottom: 1px solid var(--gray-200);
+    /* CUSTOMIZE: Bottom border */
+}
+
+/* Dark mode navbar styling */
+[data-bs-theme="dark"] .top-navbar {
+    background: var(--gray-100);
+    /* Slightly elevated background */
+    border-bottom-color: var(--gray-200);
+}
+
+/* Page title styling */
+.top-navbar h1 {
+    color: var(--gray-900);
+    font-size: 20px;
+    /* CUSTOMIZE: Title size */
+}
+
+[data-bs-theme="dark"] .top-navbar h1 {
+    color: var(--gray-700);
+    /* Lighter text in dark mode */
+}
+
+/* Link buttons (e.g., user profile) */
+.top-navbar .btn-link {
+    color: var(--gray-600);
+    /* CUSTOMIZE: Default link color */
+    text-decoration: none;
+}
+
+.top-navbar .btn-link:hover {
+    color: var(--gray-900);
+    /* CUSTOMIZE: Hover color */
+}
+
+/* ===================================================================
+   SECTION 7: Stat Cards
+   ================================================================
+
+   Dashboard statistics cards with icons and hover effects.
+   Features: Gradient icons, hover lift animation, responsive.
+
+   HOW TO CUSTOMIZE:
+   1. Card size: Adjust .card-body padding
+   2. Number size: Change .stat-card h3 font-size
+   3. Hover effect: Modify transform translateY value
+   4. Icon colors: Update .stat-icon gradients
+   5. Border radius: Adjust border-radius values
+
+   EXAMPLE: Larger cards with bigger numbers
+   .card-body { padding: 2rem; }
+   .stat-card h3 { font-size: 36px; }
+   ================================================================ */
+
+.stat-card {
+    border: 1px solid var(--gray-200);
+    /* CUSTOMIZE: Card border */
+    border-radius: 12px;
+    /* CUSTOMIZE: Rounded corners */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #fff;
+    /* Light mode background */
+}
+
+[data-bs-theme="dark"] .stat-card {
+    background: var(--gray-100);
+    /* Dark mode background */
+    border-color: var(--gray-200);
+}
+
+/* Hover lift effect */
+/* CUSTOMIZE: Card interaction on hover */
+.stat-card:hover {
+    transform: translateY(-4px);
+    /* CUSTOMIZE: Lift distance */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    /* CUSTOMIZE: Shadow depth */
+    border-color: var(--gray-300);
+    /* CUSTOMIZE: Border highlight */
+}
+
+.stat-card .card-body {
+    padding: 1.5rem;
+    /* CUSTOMIZE: Card inner spacing */
+}
+
+/* Statistic number */
+.stat-card h3 {
+    font-size: 28px;
+    /* CUSTOMIZE: Number size */
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -0.03em;
+    /* Tight letter spacing */
+}
+
+[data-bs-theme="dark"] .stat-card h3 {
+    color: var(--gray-700);
+    /* Light text in dark mode */
+}
+
+/* Statistic label */
+.stat-card p {
+    color: var(--gray-500);
+    /* Muted label color */
+    font-size: 13px;
+    /* CUSTOMIZE: Label size */
+    font-weight: 500;
+    text-transform: uppercase;
+    /* CUSTOMIZE: All caps style */
+    letter-spacing: 0.05em;
+    /* Wide letter spacing */
+}
+
+[data-bs-theme="dark"] .stat-card p {
+    color: var(--gray-600);
+    /* Brighter in dark mode for better readability */
+}
+
+/* Icon container */
+.stat-icon {
+    width: 56px;
+    /* CUSTOMIZE: Icon container size */
+    height: 56px;
+    border-radius: 10px;
+    /* CUSTOMIZE: Icon corner radius */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    /* CUSTOMIZE: Icon size */
+}
+
+/* Icon color variants with gradients */
+/* CUSTOMIZE: Gradient backgrounds for icon types */
+.stat-icon.icon-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: #fff;
+}
+
+.stat-icon.icon-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+}
+
+.stat-icon.icon-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #fff;
+}
+
+.stat-icon.icon-info {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: #fff;
+}
+
+/* ===================================================================
+   SECTION 8: Chart Containers
+   ================================================================
+
+   Containers for Chart.js visualizations.
+
+   HOW TO CUSTOMIZE:
+   - Adjust height for chart size
+   - Add padding for spacing around charts
+   - Modify for responsive chart sizing
+   ================================================================ */
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    /* CUSTOMIZE: Chart height */
+}
+
+/* ===================================================================
+   SECTION 9: Card Components
+   ================================================================
+
+   General card component styling (tables, charts, content blocks).
+
+   HOW TO CUSTOMIZE:
+   1. Border radius: Change for sharper/rounder corners
+   2. Shadow: Adjust box-shadow for depth
+   3. Header padding: Modify for height
+   4. Header font: Change h2/h3 size and weight
+
+   EXAMPLE: Flat cards without shadows
+   .card { box-shadow: none; border: 2px solid var(--gray-200); }
+   ================================================================ */
+
+.card {
+    border: 1px solid var(--gray-200);
+    /* CUSTOMIZE: Card border */
+    border-radius: 12px;
+    /* CUSTOMIZE: Corner radius */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    /* CUSTOMIZE: Subtle shadow */
+}
+
+[data-bs-theme="dark"] .card {
+    background: var(--gray-100);
+    /* Dark mode card background */
+    border-color: var(--gray-200);
+}
+
+/* Card header styling */
+.card-header {
+    border-bottom: 1px solid var(--gray-200);
+    /* CUSTOMIZE: Header divider */
+    padding: 1.25rem 1.5rem;
+    /* CUSTOMIZE: Header padding */
+}
+
+[data-bs-theme="dark"] .card-header {
+    background: var(--gray-200) !important;
+    /* Slightly darker than card body for contrast (override .bg-white) */
+    border-bottom-color: var(--gray-100);
+    /* Subtle border for separation */
+}
+
+/* Card header titles */
+.card-header h3,
+.card-header h2 {
+    color: var(--gray-900);
+    font-size: 16px;
+    /* CUSTOMIZE: Title size */
+    font-weight: 600;
+}
+
+[data-bs-theme="dark"] .card-header h3,
+[data-bs-theme="dark"] .card-header h2 {
+    color: var(--gray-700);
+    /* Light gray text on dark background */
+}
+
+/* ===================================================================
+   SECTION 10: Table Styles
+   ================================================================
+
+   Data tables with hover effects and responsive styling.
+
+   HOW TO CUSTOMIZE:
+   1. Font size: Adjust table and thead font-size
+   2. Cell padding: Change td/th padding values
+   3. Header styling: Modify thead background/colors
+   4. Hover color: Update tbody tr:hover background
+   5. Border thickness: Adjust border-bottom width
+
+   EXAMPLE: Compact table with tighter spacing
+   .table { font-size: 13px; }
+   .table thead th, .table tbody td { padding: 0.75rem 1rem; }
+   ================================================================ */
+
+.table {
+    color: var(--gray-700);
+    /* Default text color */
+    font-size: 14px;
+    /* CUSTOMIZE: Table text size */
+}
+
+[data-bs-theme="dark"] .table {
+    color: var(--gray-600);
+    /* Lighter text in dark mode */
+}
+
+/* Table header styling */
+.table thead th {
+    font-weight: 600;
+    font-size: 12px;
+    /* CUSTOMIZE: Header text size */
+    text-transform: uppercase;
+    /* CUSTOMIZE: All caps headers */
+    letter-spacing: 0.05em;
+    /* Wide letter spacing */
+    color: var(--gray-600);
+    /* Muted header color */
+    border-bottom: 2px solid var(--gray-200);
+    /* CUSTOMIZE: Header border */
+    padding: 1rem 1.5rem;
+    /* CUSTOMIZE: Header cell padding */
+}
+
+[data-bs-theme="dark"] .table thead {
+    background: var(--gray-100) !important;
+    /* Match card header style for consistency (override .table-light) */
+}
+
+[data-bs-theme="dark"] .table thead th {
+    background: var(--gray-100) !important;
+    /* Match card header background */
+    color: var(--gray-700) !important;
+    /* Light gray text on dark background */
+}
+
+/* Table body cells */
+.table tbody td {
+    padding: 1rem 1.5rem;
+    /* CUSTOMIZE: Cell padding */
+    vertical-align: middle;
+    /* Center content vertically */
+    border-bottom: 1px solid var(--gray-100);
+    /* CUSTOMIZE: Row divider */
+}
+
+[data-bs-theme="dark"] .table tbody td {
+    border-bottom-color: var(--gray-200);
+}
+
+/* Row hover effect */
+/* CUSTOMIZE: Highlight row on hover */
+.table tbody tr:hover {
+    background-color: var(--gray-50);
+    /* CUSTOMIZE: Hover background */
+}
+
+[data-bs-theme="dark"] .table tbody tr:hover {
+    background-color: var(--gray-200);
+}
+
+/* Remove border from last row */
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===================================================================
+   SECTION 11: Button Styles
+   ================================================================
+
+   Primary button styling with hover states.
+
+   HOW TO CUSTOMIZE:
+   - Change padding for button size
+   - Adjust font-size for text size
+   - Modify colors using CSS variables
+   - Add new button variants by copying structure
+   ================================================================ */
+
+.btn-primary {
+    background-color: var(--primary-color);
+    /* CUSTOMIZE: Button background */
+    border-color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    /* CUSTOMIZE: Button padding */
+    font-size: 14px;
+    /* CUSTOMIZE: Button text size */
+    color: #fff;
+}
+
+/* Button hover state */
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    /* CUSTOMIZE: Hover color */
+    border-color: var(--primary-dark);
+    color: #fff;
+}
+
+/* Small button variant */
+.btn-sm {
+    padding: 0.375rem 0.875rem;
+    /* CUSTOMIZE: Smaller padding */
+    font-size: 13px;
+    /* CUSTOMIZE: Smaller text */
+}
+
+/* ===================================================================
+   SECTION 12: Badge Styles
+   ================================================================
+
+   Status badges and labels with color variants.
+   Uses CSS variables for consistent theming.
+
+   HOW TO CUSTOMIZE:
+   - Change padding for badge size
+   - Adjust font-size for text size
+   - Modify colors using status color variables
+   - Adjust letter-spacing for readability
+   ================================================================ */
+
+.badge {
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    /* CUSTOMIZE: Badge padding */
+    font-size: 12px;
+    /* CUSTOMIZE: Badge text size */
+    letter-spacing: 0.02em;
+    /* Slight letter spacing */
+}
+
+/* Badge color variants */
+/* CUSTOMIZE: Status badge colors using CSS variables */
+.badge.bg-success {
+    background-color: var(--success-color) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--warning-color) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--danger-color) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--info-color) !important;
+    color: #fff !important;
+}
+
+/* Text color utilities */
+/* CUSTOMIZE: Standalone text color classes */
+.text-muted {
+    color: var(--gray-500) !important;
+}
+
+.text-success {
+    color: var(--success-color) !important;
+}
+
+.text-danger {
+    color: var(--danger-color) !important;
+}
+
+/* ===================================================================
+   SECTION 13: Profile Images
+   ================================================================
+
+   Circular profile image styling with borders.
+
+   HOW TO CUSTOMIZE:
+   - Change border width for prominence
+   - Adjust border-color for different look
+   - Add box-shadow for depth effect
+   ================================================================ */
+
+.rounded-circle {
+    border: 2px solid var(--gray-100);
+    /* CUSTOMIZE: Image border */
+}
+
+[data-bs-theme="dark"] .rounded-circle {
+    border-color: var(--gray-200);
+    /* Visible border in dark mode */
+}
+
+/* ===================================================================
+   SECTION 14: Dropdown Menu
+   ================================================================
+
+   Dropdown menus for user profile and theme switcher.
+   Includes active state for theme selection.
+
+   HOW TO CUSTOMIZE:
+   1. Menu width: Add min-width to .dropdown-menu
+   2. Item padding: Adjust .dropdown-item padding
+   3. Shadow: Modify box-shadow depth
+   4. Border radius: Change corner roundness
+   5. Active color: Update .dropdown-item.active background
+   ================================================================ */
+
+.dropdown-menu {
+    border: 1px solid var(--gray-200);
+    /* CUSTOMIZE: Menu border */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    /* CUSTOMIZE: Shadow depth */
+    border-radius: 8px;
+    /* CUSTOMIZE: Corner radius */
+    padding: 0.5rem;
+    /* CUSTOMIZE: Menu padding */
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+    background: var(--gray-100);
+    /* Dark mode background */
+    border-color: var(--gray-200);
+}
+
+/* Dropdown items */
+.dropdown-item {
+    border-radius: 6px;
+    /* CUSTOMIZE: Item corner radius */
+    padding: 0.5rem 1rem;
+    /* CUSTOMIZE: Item padding */
+    font-size: 14px;
+    /* CUSTOMIZE: Item text size */
+    color: var(--gray-700);
+}
+
+/* Item hover state */
+.dropdown-item:hover {
+    background-color: var(--gray-100);
+    /* CUSTOMIZE: Hover background */
+    color: var(--gray-900);
+    /* CUSTOMIZE: Hover text color */
+}
+
+/* Icon spacing */
+.dropdown-item i {
+    margin-right: 0.5rem;
+    /* CUSTOMIZE: Icon-text spacing */
+    width: 16px;
+    /* Fixed width for alignment */
+    color: var(--gray-500);
+    /* CUSTOMIZE: Icon color */
+}
+
+/* Active theme indicator */
+/* CUSTOMIZE: Currently selected theme styling */
+.dropdown-item.active {
+    background-color: var(--primary-color);
+    /* CUSTOMIZE: Active background */
+    color: #fff;
+}
+
+.dropdown-item.active i {
+    color: #fff;
+    /* White icon for active state */
+}
+
+/* ===================================================================
+   SECTION 15: Responsive Styles
+   ================================================================
+
+   Mobile-first responsive design adaptations.
+   Breakpoint: 768px (tablets and below)
+
+   HOW TO CUSTOMIZE:
+   1. Breakpoint: Change @media max-width value
+   2. Mobile behavior: Adjust sidebar/content widths
+   3. Additional breakpoints: Copy pattern for other sizes
+
+   EXAMPLE: Add large desktop breakpoint
+   @media (min-width: 1440px) {
+       main { max-width: 1400px; margin: 0 auto; }
+   }
+   ================================================================ */
+
+/* CUSTOMIZE: Tablet and mobile devices (768px and below) */
+@media (max-width: 768px) {
+
+    /* Force sidebar to collapsed state on mobile */
+    #sidebar {
+        width: var(--sidebar-collapsed-width);
+    }
+
+    /* Center icons in collapsed sidebar */
+    #sidebar .nav-link {
+        padding: 0.75rem 0;
+        justify-content: center;
+        margin: 0.125rem 0.75rem;
+    }
+
+    /* Hide text labels on mobile */
+    #sidebar .nav-link span {
+        display: none;
+    }
+
+    /* Remove icon margins */
+    #sidebar .nav-link i {
+        margin-right: 0;
+    }
+
+    /* Hide sidebar header text */
+    #sidebar .sidebar-header h4 {
+        opacity: 0;
+    }
+
+    /* Adjust content area for collapsed sidebar */
+    #content {
+        margin-left: var(--sidebar-collapsed-width);
+        width: calc(100% - var(--sidebar-collapsed-width));
+    }
+}
+
+/* ===================================================================
+   SECTION 16: Additional Polish
+   ================================================================
+
+   Final decorative touches and special cases.
+
+   HOW TO ADD MORE:
+   - Group related styles under descriptive comments
+   - Use CUSTOMIZE markers for key adjustment points
+   - Keep styles organized by component/feature
+   ================================================================ */
+
+/* Logo/brand icon color */
+/* CUSTOMIZE: Chart icon color in sidebar header */
+.sidebar-header .bi-bar-chart-fill {
+    color: var(--primary-color);
+    /* CUSTOMIZE: Match brand color */
+    margin-right: 0.5rem;
+}
