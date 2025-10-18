@@ -825,6 +825,49 @@ const initNavigation = () => {
 };
 
 // ============================================================================
+// BRAND CONFIGURATION
+// ============================================================================
+
+/**
+ * Initialize Brand
+ *
+ * Applies brand configuration from THEME_CONFIG to the sidebar header.
+ * Updates the logo icon and brand name dynamically.
+ *
+ * @function initBrand
+ * @returns {void}
+ */
+const initBrand = () => {
+    const sidebarHeader = querySelectorSafely('#sidebar .sidebar-header h4');
+
+    if (!sidebarHeader) {
+        console.warn('Sidebar header not found - brand configuration not applied');
+        return;
+    }
+
+    const brandConfig = THEME_CONFIG.brand;
+
+    // Update icon
+    const iconElement = sidebarHeader.querySelector('i');
+    if (iconElement) {
+        // Remove all bi-* classes
+        iconElement.className = iconElement.className
+            .split(' ')
+            .filter(cls => !cls.startsWith('bi-'))
+            .join(' ');
+
+        // Add new icon class
+        iconElement.classList.add(brandConfig.logoIcon);
+    }
+
+    // Update brand name in span element
+    const textSpan = sidebarHeader.querySelector('span');
+    if (textSpan) {
+        textSpan.textContent = brandConfig.name;
+    }
+};
+
+// ============================================================================
 // INITIALIZATION
 // ============================================================================
 
@@ -840,6 +883,7 @@ const initNavigation = () => {
 window.addEventListener('DOMContentLoaded', () => {
     try {
         // Initialize all modules
+        initBrand();
         initSidebarToggle();
         initCharts();
         initNavigation();

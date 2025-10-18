@@ -467,11 +467,18 @@ h6 {
     color: #fff;
     letter-spacing: -0.03em;
     /* Tight spacing for modern look */
+    display: flex;
+    align-items: center;
 }
 
-/* Hide title when collapsed */
+/* Hide title text when collapsed (keep icon visible) */
+#sidebar.collapsed .sidebar-header h4 span {
+    display: none;
+}
+
+/* Center icon when collapsed */
 #sidebar.collapsed .sidebar-header h4 {
-    opacity: 0;
+    justify-content: center;
 }
 
 /* Navigation list container */
@@ -1177,9 +1184,9 @@ section:last-child {
         margin-right: 0;
     }
 
-    /* Hide sidebar header text */
-    #sidebar .sidebar-header h4 {
-        opacity: 0;
+    /* Hide sidebar header text on mobile */
+    #sidebar .sidebar-header h4 span {
+        display: none;
     }
 
     /* Adjust content area for collapsed sidebar */
